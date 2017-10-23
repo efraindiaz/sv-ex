@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Survey</title>
+
+	<link rel="stylesheet" href="css/ui.jqgrid.css">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.slim.js"
+  integrity="sha256-tA8y0XqiwnpwmOIl3SGAcFl2RvxHjA8qp0+1uCGmRmg="
+  crossorigin="anonymous"></script>
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/ui.jqgrid.css">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="script.js"></script>
+	<script src="js/jquery-1.7.2.min.js"></script>
+	<script src="js/jquery.jqGrid.min.js"></script>
+	<script src="js/jquery.jqGrid.src.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/js/i18n/grid.locale-en.js"></script>
+</head>
+<body  style="background-color:gray;">
+
+	<div class="col-md-8 col-md-offset-2" style="background-color:white; margin-top:50px; padding:10px;">
+
+		<input type="text" id="code" maxlength="5">
+		<div class="form-inline">
+			<input type="text" class="form-control" id="txtQuestion">
+			<a href="#" class="btn btn-primary" onclick="addQuestion()">Add Question</a>
+		</div>
+		<table class="table">
+			<thead>
+				<td>Survey</td>
+				<td></td>
+				<td></td>
+			</thead>
+			<tbody id="tbodyQuestions">
+			</tbody>
+		</table>
+		<table id="list4"></table>
+		<div id="prowed2"></div>
+	</div>
+
+	
+	<div class="modal fade" tabindex="-1" role="dialog" id="showModal">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">Modal title</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<input type="text" value="idQuestion">
+	        <p>One fine body&hellip;</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+<script>
+
+$('#code').keyup(function(){
+
+	var text = $('#code').val();	
+	var code = text.replace(/\s/g, "");
+	var lng = code.length;
+	if(lng === 5){
+		alert("solo se permite 5 car")
+	}
+	$('#code').val(code)
+	console.log(code)
+});
+
+jQuery("#list4").jqGrid({
+	datatype: "local",
+	height: 250,
+   	colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes', 'Detail', 'Remove'],
+   	colModel:[   		
+   		{name:'id',index:'id', width:60, sorttype:"int"},
+   		{name:'invdate',index:'invdate', width:90, sorttype:"date"},
+   		{name:'name',index:'name', width:100},
+   		{name:'amount',index:'amount', width:80, align:"right",sorttype:"float"},
+   		{name:'tax',index:'tax', width:80, align:"right",sorttype:"float"},		
+   		{name:'total',index:'total', width:80,align:"right",sorttype:"float"},		
+   		{name:'note',index:'note', width:150, sortable:false},
+   		{name:'optional',index:'optional', width:50,sortable:false, formatter:detail},
+   		{name:'remove',index:'remove', width:75,sortable:false, formatter:remove}		
+   	],
+   	caption: "Manipulating Array Data",
+   	rowNum:10,
+   	loadonce: true,
+   	rowList:[10,20,30],
+   	pager: '#prowed2',
+   	sortname: 'id',
+    viewrecords: true,
+	sortname: 'id',
+    viewrecords: true,
+    sortorder: "desc",
+    caption: "Load Once Example"
+});
+
+function detail(cellvalue, options, rowObject){
+
+	var id = rowObject.id;
+	var name = rowObject.name;
+	console.log(rowObject.invdate)
+	var btn = "<a href='#' class='btn btn-warning btn-xs' onclick=\"searchDetail('"+name+"')\">"+name+"</a>"
+	return btn;
+}
+
+function remove(cellvalue, options, rowObject){
+
+	var id = rowObject.id;
+	var name = rowObject.name;
+	var btn = "<a href='#' class='btn btn-danger btn-xs' onclick=\"searchDetail('"+name+"')\">"+name+"</a>";
+	return btn;
+}
+
+function searchDetail(id){
+
+	alert("detail for " + id);
+}
+
+var mydata = [
+		{id:"1",invdate:"2007-10-01",name:"test1",note:"note",amount:"200.00",tax:"10.00",total:"210.00"},
+		{id:"2",invdate:"2007-10-02",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
+		{id:"3",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"},
+		{id:"4",invdate:"2007-10-04",name:"test4",note:"note",amount:"200.00",tax:"10.00",total:"210.00"},
+		{id:"5",invdate:"2007-10-05",name:"test5",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
+		{id:"6",invdate:"2007-09-06",name:"test6",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"},
+		{id:"8",invdate:"2007-10-03",name:"test7",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
+		{id:"9",invdate:"2007-09-01",name:"test8",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"},
+		{id:"10",invdate:"2007-10-04",name:"tes9",note:"note",amount:"200.00",tax:"10.00",total:"210.00"},
+		{id:"11",invdate:"2007-10-03",name:"test10",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
+		{id:"122",invdate:"2007-09-01",name:"test11",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"},
+		{id:"123",invdate:"2007-10-04",name:"tes9",note:"note",amount:"200.00",tax:"10.00",total:"210.00"},
+		{id:"124",invdate:"2007-10-03",name:"test10",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
+		{id:"125",invdate:"2007-09-01",name:"test11",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}
+		];
+for(var i=0;i<=mydata.length;i++){
+
+	jQuery("#list4").jqGrid('addRowData',i+1,mydata[i]);
+}
+jQuery("#rowed2").jqGrid('navGrid',"#prowed2",{edit:false,add:false,del:false});
+jQuery("#list4").setGridParam({ rowNum: 10 }).trigger("reloadGrid");
+
+function myAlert(){console.log("hola mundo")}
+
+</script>
+</body>
+</html>
